@@ -66,6 +66,6 @@ class SubCategory(models.Model):
         verbose_name_plural = "Подкатегории"
 
     def __str__(self):
-        return f"{self.category}=>{self.category}"
+        return f"{self.category}=>{self.name}"
 
 
