@@ -27,7 +27,7 @@ class Status(models.Model):
     def __str__(self):
         return f"{self.name_status}"
 
-class TypeOperations(models.Model):
+class TypeOperation(models.Model):
     """Тип операции(Пополнение/Списание)"""
     type_operation = models.CharField(max_length=100, unique=True)
 
