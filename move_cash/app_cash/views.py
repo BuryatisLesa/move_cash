@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-from app_cash.models import MoveCash
+from app_cash.models import MoveCash, Category, TypeOperation
 from app_cash.forms import MoveCashForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
@@ -21,19 +21,19 @@ def register(request):
 
 class MoveCashList(ListView):
     model = MoveCash
-    template_name = "move_cash/move-cash-list.html"
+    template_name = "move_cash/movecash_list.html"
     context_object_name = "movecashs"
     paginate_by = 5
     ordering = ["-created_at"]
 
 class MoveCashDetail(DetailView):
     model = MoveCash
-    template_name = "move_cash/move-cash-detail.html"
+    template_name = "move_cash/movecash_detail.html"
     context_object_name = "movecash"
 
 class MoveCashCreate(LoginRequiredMixin, CreateView):
     model = MoveCash
-    template_name = "move_cash/move-cash-create.html"
+    template_name = "move_cash/movecash_create.html"
     form_class = MoveCashForm
 
     def form_valid(self, form):
@@ -41,11 +41,27 @@ class MoveCashCreate(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
     
-    success_url = reverse_lazy("movecash_list")
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        
+        type_id = self.request.POST.get("typeoperation") or self.request.GET.get("typeoperation")
+
+        if type_id:
+            try:
+                type_operation = TypeOperation.objects.get(id=type_id)
+                # Фильтруем категории по типу операции
+                form.fields["category"].queryset = Category.objects.filter(type_operation=type_operation)
+            except TypeOperation.DoesNotExist:
+                pass
+
+        return form
+
+    
+    success_url = reverse_lazy("movecashs")
 
 class MoveCashUpdate(LoginRequiredMixin, UpdateView):
     model = MoveCash
-    template_name = "move_cash/move-cash-create.html"
+    template_name = "move_cash/movecash_create.html"
     form_class = MoveCashForm
 
     def dispatch(self, request, *args, **kwargs):
@@ -60,7 +76,7 @@ class MoveCashUpdate(LoginRequiredMixin, UpdateView):
 
 class MoveCashDelete(LoginRequiredMixin, DeleteView):
     model = MoveCash
-    template_name = "move_cash/move-cash-delete.html"
+    template_name = "move_cash/movecash_delete.html"
 
 
     def dispatch(self, request, *args, **kwargs):
