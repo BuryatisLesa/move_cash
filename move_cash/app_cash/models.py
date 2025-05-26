@@ -11,7 +11,6 @@ class MoveCash(models.Model):
     sum_operation = models.FloatField()
     comment = models.CharField(max_length=200, blank=True)
 
-
     class Meta:
         verbose_name = "ДДС"
         verbose_name_plural = "Движение денежных средств"

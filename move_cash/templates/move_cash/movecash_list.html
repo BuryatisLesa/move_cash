@@ -1,5 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
+<form method="get" action="." class="bg-light p-4 rounded shadow-sm mb-4">
+  <div class="row g-3 align-items-end">
+
+    <div class="col-md-3">
+      <label for="created_at" class="form-label">Дата</label>
+      <input type="date" name="created_at" id="created_at" class="form-control" value="{{ request.GET.created_at }}">
+    </div>
+
+    <div class="col-md-3">
+      <label for="typeoperation" class="form-label">Тип операции</label>
+      <select name="typeoperation" id="typeoperation" class="form-select">
+        <option value="">-- Выберите --</option>
+        <option value="Списание" {% if request.GET.typeoperation == "Списание" %}selected{% endif %}>Списание</option>
+        <option value="Пополнение" {% if request.GET.typeoperation == "Пополнение" %}selected{% endif %}>Пополнение</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="status" class="form-label">Статус</label>
+      <select name="status" id="status" class="form-select">
+        <option value="">-- Статус --</option>
+        {% for status in statuses %}
+          <option value="{{ status.id }}" {% if request.GET.status == status.id|stringformat:"s" %}selected{% endif %}>
+            {{ status.name_status }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="category" class="form-label">Категория</label>
+      <select name="category" id="category" class="form-select">
+        <option value="">-- Категория --</option>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="subcategory" class="form-label">Подкатегория</label>
+      <select name="subcategory" id="subcategory" class="form-select">
+        <option value="">-- Подкатегория --</option>
+        {% for sub in subcategories %}
+          <option value="{{ sub.id }}" {% if request.GET.subcategory == sub.id|stringformat:"s" %}selected{% endif %}>
+            {{ sub.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+<div class="col-md-3">
+  <label for="min_sum" class="form-label">Сумма от</label>
+  <input type="number" step="0.01" name="min_sum" id="min_sum" class="form-control"
+         value="{{ request.GET.min_sum }}">
+</div>
+
+<div class="col-md-3">
+  <label for="max_sum" class="form-label">Сумма до</label>
+  <input type="number" step="0.01" name="max_sum" id="max_sum" class="form-control"
+         value="{{ request.GET.max_sum }}">
+</div>
+
+    <div class="col-md-3">
+      <label for="comment" class="form-label">Комментарий</label>
+      <input type="text" name="comment" id="comment" class="form-control"
+             value="{{ request.GET.comment }}">
+    </div>
+
+    <div class="col-md-2 d-grid">
+      <button type="submit" class="btn btn-success">🔍 Фильтровать</button>
+    </div>
+
+  </div>
+</form>
 <table class = "table table-bordered table-striped">
   <thead>
     <tr>
@@ -12,17 +89,23 @@
       <th>Комментарий</th>
     </tr>
   </thead>
-    {% for movecash in movecashs %}
+{% if movecashs %}
+  {% for movecash in movecashs %}
     <tr>
-        <td>{{movecash.created_at|date:"d.m.Y"}}</td>
-        <td>{{movecash.status}}</td>
-        <td>{{movecash.typeoperation}}</td>
-        <td>{{movecash.category}}</td>
-        <td>{{movecash.subcategory}}</td>
-        <td>{{movecash.sum_operation}}</td>
-        <td>{{movecash.comment}}</td>
+      <td>{{ movecash.created_at|date:"d.m.Y" }}</td>
+      <td>{{ movecash.status }}</td>
+      <td>{{ movecash.typeoperation }}</td>
+      <td>{{ movecash.category }}</td>
+      <td>{{ movecash.subcategory }}</td>
+      <td>{{ movecash.sum_operation }}</td>
+      <td>{{ movecash.comment }}</td>
     </tr>
-    {% endfor %}
+  {% endfor %}
+{% else %}
+  <tr>
+    <td colspan="7" class="text-center">Нет записей по заданным условиям</td>
+  </tr>
+{% endif %}
     
     
 </table>
