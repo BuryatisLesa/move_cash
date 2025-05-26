@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-from app_cash.models import MoveCash, Category, TypeOperation
+from app_cash.models import MoveCash, Category, TypeOperation, SubCategory
 from app_cash.forms import MoveCashForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
@@ -44,7 +44,7 @@ class MoveCashCreate(LoginRequiredMixin, CreateView):
     def get_form(self, form_class = None):
         form = super().get_form(form_class)
         
-        type_id = self.request.POST.get("typeoperation") or self.request.GET.get("typeoperation")
+        type_id = self.request.POST.get("typeoperation")
 
         if type_id:
             try:
@@ -53,7 +53,14 @@ class MoveCashCreate(LoginRequiredMixin, CreateView):
                 form.fields["category"].queryset = Category.objects.filter(type_operation=type_operation)
             except TypeOperation.DoesNotExist:
                 pass
-
+        category_id = self.request.POST.get("category")
+        if category_id:
+            try:
+                category = Category.objects.get(id=category_id)
+                # Фильтруем подкатегории по типу категорий
+                form.fields["subcategory"].queryset = SubCategory.objects.filter(category=category)
+            except TypeOperation.DoesNotExist:
+                pass
         return form
 
     

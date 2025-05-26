@@ -14,11 +14,11 @@ class MoveCash(models.Model):
 
     class Meta:
         verbose_name = "ДДС"
-        verbose_name = "Движение денежных средств"
+        verbose_name_plural = "Движение денежных средств"
 
 
     def __str__(self):
-        return f"{self.created_at}|{self.status}|{self.typeoperation}|{self.category}=>{self.subcategory}|{self.sum_operation}|{self.comment}"
+        return f"{self.id}"
 
 
 
@@ -66,6 +66,6 @@ class SubCategory(models.Model):
         verbose_name_plural = "Подкатегории"
 
     def __str__(self):
-        return f"{self.category}=>{self.name}"
+        return f"{self.name}"
 
 

@@ -12,8 +12,8 @@ class MoveCashForm(forms.ModelForm):
             ),
             "status": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите статус операции"}),
             "typeoperation": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите тип операции"}),
-            "category": forms.Select(attrs={"class": "form-control", "placeholder": "Категория операции"}),
-            "subcategory": forms.Select(attrs={"class": "form-control", "placeholder": "Подкатегория операции"}),
+            "category": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите категорию"}),
+            "subcategory": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите подкатегорию"}),
             "sum_operation": forms.NumberInput(attrs={"min": 0, "step": 0.01, "class": "form-control", "placeholder": "Введите сумму"}),
             "comment": forms.TextInput(attrs={"class": "form-control", "placeholder": "Введите комментарий"})
         }
@@ -26,3 +26,6 @@ class MoveCashForm(forms.ModelForm):
             "sum_operation": "Сумма",
             "comment": "Комментарий"
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

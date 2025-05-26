@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<table class = "table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Дата</th>
+      <th>Тип</th>
+      <th>Операция</th>
+      <th>Категория</th>
+      <th>Подкатегория</th>
+      <th>Сумма</th>
+      <th>Комментарий</th>
+    </tr>
+  </thead>
+    {% for movecash in movecashs %}
+    <tr>
+        <td>{{movecash.created_at|date:"d.m.Y"}}</td>
+        <td>{{movecash.status}}</td>
+        <td>{{movecash.typeoperation}}</td>
+        <td>{{movecash.category}}</td>
+        <td>{{movecash.subcategory}}</td>
+        <td>{{movecash.sum_operation}}</td>
+        <td>{{movecash.comment}}</td>
+    </tr>
+    {% endfor %}
+    
+    
+</table>
+{% endblock content %}
