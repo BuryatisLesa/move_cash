@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class MoveCash(models.Model):
     """Движение денежных средств"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="movecashes")
     created_at = models.DateTimeField(default=timezone.now)
     status = models.ForeignKey("Status", on_delete=models.CASCADE, related_name="status")
     typeoperation = models.ForeignKey("TypeOperation", on_delete=models.CASCADE, related_name="typeoperations")

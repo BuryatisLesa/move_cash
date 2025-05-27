@@ -6,6 +6,7 @@ from app_cash.forms import MoveCashForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import User
 
 
 
@@ -91,9 +92,14 @@ class MoveCashCreate(LoginRequiredMixin, CreateView):
     
     def get_form(self, form_class = None):
         form = super().get_form(form_class)
-        
+        user_id = self.request.POST.get("user")
         type_id = self.request.POST.get("typeoperation")
-
+        category_id = self.request.POST.get("category")
+        if user_id:
+            try:
+                form.fields["user"].queryset = User.objects.filter(id=user_id)
+            except User.DoesNotExist:
+                pass
         if type_id:
             try:
                 type_operation = TypeOperation.objects.get(id=type_id)
@@ -101,7 +107,6 @@ class MoveCashCreate(LoginRequiredMixin, CreateView):
                 form.fields["category"].queryset = Category.objects.filter(type_operation=type_operation)
             except TypeOperation.DoesNotExist:
                 pass
-        category_id = self.request.POST.get("category")
         if category_id:
             try:
                 category = Category.objects.get(id=category_id)
@@ -109,6 +114,7 @@ class MoveCashCreate(LoginRequiredMixin, CreateView):
                 form.fields["subcategory"].queryset = SubCategory.objects.filter(category=category)
             except TypeOperation.DoesNotExist:
                 pass
+
         return form
     
     success_url = reverse_lazy("movecashs")

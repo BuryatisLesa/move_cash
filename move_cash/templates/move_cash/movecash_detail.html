@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Детали операции</h2>
+<a href="{% url 'movecashs_update' movecash.pk %}" class="btn btn-outline-primary">Редактировать операцию</a>
+{% if movecash %}
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Дата</th>
+      <th>Тип</th>
+      <th>Операция</th>
+      <th>Категория</th>
+      <th>Подкатегория</th>
+      <th>Сумма</th>
+      <th>Комментарий</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ movecash.created_at|date:"d.m.Y" }}</td>
+      <td>{{ movecash.status }}</td>
+      <td>{{ movecash.typeoperation }}</td>
+      <td>{{ movecash.category }}</td>
+      <td>{{ movecash.subcategory }}</td>
+      <td>{{ movecash.sum_operation }}</td>
+      <td>{{ movecash.comment }}</td>
+    </tr>
+  </tbody>
+</table>
+{% else %}
+  <p class="text-center">Такой записи нет</p>
+{% endif %}
+{% endblock content %}

@@ -5,11 +5,13 @@ class MoveCashForm(forms.ModelForm):
     class Meta:
         model = MoveCash
         fields = "__all__"
+        exclude = ['user']
         widgets = {
             "created_at": forms.DateTimeInput(
                 attrs={'type': 'datetime-local', 'class': 'form-control'},
                 format='%Y-%m-%dT%H:%M'
             ),
+            "user": forms.HiddenInput(),
             "status": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите статус операции"}),
             "typeoperation": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите тип операции"}),
             "category": forms.Select(attrs={"class": "form-control", "placeholder": "Выберите категорию"}),
