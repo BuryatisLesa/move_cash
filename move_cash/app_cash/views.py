@@ -6,7 +6,6 @@ from app_cash.forms import MoveCashForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 
 
 
@@ -19,6 +18,7 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
 
 class MoveCashList(ListView):
     model = MoveCash
