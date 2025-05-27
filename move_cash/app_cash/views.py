@@ -130,8 +130,35 @@ class MoveCashUpdate(LoginRequiredMixin, UpdateView):
         if movecash.user != request.user:
             raise PermissionDenied("У вас нет прав для редактирование данной операции")
         return super().dispatch(request, *args, **kwargs)
+    
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        user_id = self.request.POST.get("user")
+        type_id = self.request.POST.get("typeoperation")
+        category_id = self.request.POST.get("category")
+        if user_id:
+            try:
+                form.fields["user"].queryset = User.objects.filter(id=user_id)
+            except User.DoesNotExist:
+                pass
+        if type_id:
+            try:
+                type_operation = TypeOperation.objects.get(id=type_id)
+                # Фильтруем категории по типу операции
+                form.fields["category"].queryset = Category.objects.filter(type_operation=type_operation)
+            except TypeOperation.DoesNotExist:
+                pass
+        if category_id:
+            try:
+                category = Category.objects.get(id=category_id)
+                # Фильтруем подкатегории по типу категорий
+                form.fields["subcategory"].queryset = SubCategory.objects.filter(category=category)
+            except TypeOperation.DoesNotExist:
+                pass
 
-    success_url = reverse_lazy("movecash_list")
+        return form
+
+    success_url = reverse_lazy("movecashs")
 
 
 class MoveCashDelete(LoginRequiredMixin, DeleteView):
